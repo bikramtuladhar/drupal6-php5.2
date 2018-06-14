@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+    mysql:
+        image: mysql:5.7
+        volumes:
+            - db_data:/home/bikram/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: secret
+            MYSQL_DATABASE: drupal
+            MYSQL_USER: drupal
+            MYSQL_PASSWORD: secret
+
+    web:
+        image: nginx:latest
+        ports:
+            - "8080:80"
+        volumes:
+            - ./code:/code
+            - ./site.conf:/etc/nginx/conf.d/default.conf
+        links:
+            - php
+    php:
+        image: php52:latest
+        volumes:
+            - ./code:/code
+        links:
+            - mysql
+volumes:
+    db_data:
